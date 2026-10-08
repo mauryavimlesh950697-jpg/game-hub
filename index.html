@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎮 Game Hub - Ludo & Snakes & Ladders</title>
+    <title>🎮 Game Hub - Ludo & Snakes and Ladders</title>
     <style>
         * {
             margin: 0;
@@ -24,128 +24,197 @@
             padding: 15px;
         }
 
-        /* SCREENS */
+        /* SCREEN MANAGEMENT */
         .screen {
             display: none;
-            animation: fadeIn 0.3s ease-in;
+            min-height: 100vh;
+            padding: 20px;
         }
 
         .screen.active {
             display: flex;
+            flex-direction: column;
+            animation: slideIn 0.4s ease-out;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* HOME SCREEN */
         #homeScreen {
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
-        .home-title {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 50px;
+        .home-container {
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .games-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
             width: 100%;
             max-width: 500px;
         }
 
-        .game-btn {
+        .app-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .app-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 50px;
+            color: #e0e0e0;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .game-card {
             padding: 40px 20px;
             border: none;
-            border-radius: 15px;
-            font-size: 2rem;
+            border-radius: 20px;
+            font-size: 2.5rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
-            color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            background: white;
+            color: #333;
+            position: relative;
+            overflow: hidden;
         }
 
-        .game-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.3s;
+            z-index: -1;
         }
 
-        .ludo-btn {
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-card:hover::before {
+            left: 100%;
+        }
+
+        .ludo-card {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
         }
 
-        .snakes-btn {
+        .snakes-card {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .game-emoji {
+            display: block;
+            font-size: 3rem;
+            margin-bottom: 10px;
         }
 
         .game-name {
             display: block;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             margin-top: 10px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         /* PLAYER SELECTION SCREEN */
         #playerScreen {
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
-        .player-selector {
-            background: rgba(0,0,0,0.2);
+        .player-container {
+            background: rgba(0, 0, 0, 0.3);
             padding: 40px 30px;
-            border-radius: 15px;
+            border-radius: 20px;
             text-align: center;
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 400px;
         }
 
-        .player-selector h2 {
+        .player-container h2 {
             font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .player-subtitle {
+            font-size: 1rem;
             margin-bottom: 30px;
+            color: #ddd;
         }
 
         .player-options {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin-bottom: 30px;
         }
 
-        .player-option {
+        .player-btn {
             padding: 20px;
             border: 3px solid white;
-            border-radius: 10px;
-            font-size: 1.5rem;
+            border-radius: 12px;
+            font-size: 1.3rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
         }
 
-        .player-option:hover {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.05);
+        .player-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.08);
         }
 
-        .player-option.selected {
-            background: rgba(255,255,255,0.5);
+        .player-btn.selected {
+            background: rgba(255, 235, 59, 0.8);
+            color: #333;
             border-color: #ffeb3b;
+            box-shadow: 0 0 20px rgba(255, 235, 59, 0.5);
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .start-btn {
-            padding: 15px 40px;
+            padding: 15px 30px;
             font-size: 1.2rem;
-            background: #4caf50;
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
             color: white;
             border: none;
             border-radius: 10px;
@@ -155,208 +224,122 @@
         }
 
         .start-btn:hover {
-            background: #45a049;
             transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
         }
 
-        .back-btn, .home-btn {
-            padding: 10px 20px;
+        .start-btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-btn {
+            padding: 12px 25px;
             font-size: 1rem;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
             border: 2px solid white;
             border-radius: 8px;
             cursor: pointer;
-            margin: 10px;
+            font-weight: bold;
             transition: all 0.3s;
         }
 
-        .back-btn:hover, .home-btn:hover {
-            background: rgba(255,255,255,0.4);
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
         }
 
-        /* LUDO GAME */
-        #ludoScreen {
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .ludo-header {
-            text-align: center;
+        /* TOP HEADER FOR GAME SCREENS */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
-        }
-
-        .ludo-header h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .ludo-status {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
             padding: 15px;
             border-radius: 10px;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
         }
 
-        .ludo-board {
-            background: #1f2937;
-            padding: 10px;
+        .game-header h1 {
+            flex: 1;
+            text-align: center;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .header-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* LUDO GAME SCREEN */
+        #ludoScreen {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .ludo-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .game-status {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            text-align: center;
+            width: 100%;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .game-board {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
             border-radius: 15px;
             margin-bottom: 15px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
 
-        #ludoCanvas {
+        canvas {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             height: auto;
             background: white;
             border-radius: 10px;
             display: block;
-            margin: 0 auto;
         }
 
-        .ludo-controls {
+        .game-controls {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .ludo-controls button {
-            padding: 12px 24px;
-            font-size: 1rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .roll-dice-btn {
-            background: #ffeb3b;
-            color: #333;
-            padding: 12px 30px;
-            font-size: 1.1rem;
-        }
-
-        .roll-dice-btn:hover {
-            background: #fdd835;
-            transform: scale(1.05);
-        }
-
-        .new-game-btn {
-            background: #4caf50;
-            color: white;
-        }
-
-        .new-game-btn:hover {
-            background: #45a049;
-        }
-
-        /* SNAKES & LADDERS GAME */
-        #snakesScreen {
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .snakes-header {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .snakes-header h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .snakes-status {
-            background: rgba(0,0,0,0.3);
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .snakes-board {
-            background: white;
-            padding: 10px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-        }
-
-        #snakesBoard {
-            display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            gap: 2px;
             width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
         }
 
-        .snakes-cell {
-            aspect-ratio: 1;
-            border: 1px solid #ccc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            position: relative;
-            background: #f0f0f0;
-            font-size: clamp(10px, 3vw, 14px);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .snakes-cell.snake-cell {
-            background: #ffcccc;
-        }
-
-        .snakes-cell.ladder-cell {
-            background: #ccffcc;
-        }
-
-        .snakes-cell .cell-number {
-            position: absolute;
-            top: 2px;
-            left: 3px;
-            font-size: 9px;
-        }
-
-        .snakes-cell .player-token {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            font-weight: bold;
-            border: 2px solid white;
-            z-index: 10;
-        }
-
-        .player-token.p1 { background: #ff4444; }
-        .player-token.p2 { background: #4444ff; }
-        .player-token.p3 { background: #44ff44; }
-        .player-token.p4 { background: #ff9944; }
-
-        .snakes-icon {
-            font-size: 1.5rem;
-            position: absolute;
-        }
-
-        .snakes-controls {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .snakes-controls button {
+        .roll-btn, .new-game-btn {
             padding: 12px 24px;
             font-size: 1rem;
             border: none;
@@ -369,643 +352,761 @@
         .roll-btn {
             background: #ffeb3b;
             color: #333;
-            padding: 12px 30px;
             font-size: 1.1rem;
+            padding: 12px 30px;
         }
 
-        .roll-btn:hover {
+        .roll-btn:hover:not(:disabled) {
             background: #fdd835;
             transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 235, 59, 0.4);
         }
 
-        .snakes-new-btn {
+        .roll-btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        .new-game-btn {
             background: #4caf50;
             color: white;
         }
 
-        .snakes-new-btn:hover {
+        .new-game-btn:hover {
             background: #45a049;
+            transform: scale(1.05);
+        }
+
+        /* SNAKES & LADDERS SCREEN */
+        #snakesScreen {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .snakes-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
         }
 
         .dice-display {
-            font-size: 3rem;
+            font-size: 4rem;
             text-align: center;
-            margin: 15px 0;
+            margin: 10px 0;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .top-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .snakes-board-container {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 15px;
             margin-bottom: 15px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            max-height: 70vh;
+            overflow: auto;
         }
+
+        #snakesBoard {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 3px;
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            background: #f5f5f5;
+            font-size: 11px;
+            border-radius: 5px;
+            overflow: visible;
+        }
+
+        .cell.snake-cell {
+            background: #ffcccc;
+        }
+
+        .cell.ladder-cell {
+            background: #ccffcc;
+        }
+
+        .cell-number {
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            font-size: 8px;
+            color: #666;
+        }
+
+        .cell-icon {
+            font-size: 1.2rem;
+            position: absolute;
+        }
+
+        .player-marker {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: bold;
+            border: 2px solid white;
+            z-index: 10;
+            color: white;
+        }
+
+        .p1 { background: #ff4444; }
+        .p2 { background: #4444ff; }
+        .p3 { background: #44bb44; }
+        .p4 { background: #ff8844; }
 
         @media (max-width: 600px) {
-            .games-container {
+            .games-grid {
                 grid-template-columns: 1fr;
             }
 
-            .home-title {
-                font-size: 2rem;
-            }
-
-            .game-btn {
-                padding: 30px 15px;
-                font-size: 1.5rem;
+            .app-title {
+                font-size: 2.5rem;
             }
 
             .player-options {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
             }
 
-            #ludoCanvas {
-                max-width: 100%;
+            .game-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .game-header h1 {
+                font-size: 1.5rem;
             }
 
             #snakesBoard {
                 max-width: 100%;
             }
-        }
 
-        .dice-emoji {
-            display: inline-block;
-            font-size: 2rem;
-            margin: 0 5px;
-            animation: bounce 0.5s;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            canvas {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- HOME SCREEN -->
-    <div id="homeScreen" class="screen active">
-        <div class="container">
-            <div class="home-title">🎮 GAME HUB</div>
-            <div class="games-container">
-                <button class="game-btn ludo-btn" onclick="selectGame('ludo')">
-                    🎲
+<!-- HOME SCREEN -->
+<div id="homeScreen" class="screen active">
+    <div class="container">
+        <div class="home-container">
+            <div class="app-title">🎮 GAME HUB</div>
+            <div class="app-subtitle">अपना पसंदीदा गेम चुनें</div>
+            <div class="games-grid">
+                <button class="game-card ludo-card" onclick="selectGame('ludo')">
+                    <span class="game-emoji">🎲</span>
                     <span class="game-name">LUDO</span>
                 </button>
-                <button class="game-btn snakes-btn" onclick="selectGame('snakes')">
-                    🐍
-                    <span class="game-name">SNAKES & LADDERS</span>
+                <button class="game-card snakes-card" onclick="selectGame('snakes')">
+                    <span class="game-emoji">🐍</span>
+                    <span class="game-name">साँप & सीढ़ी</span>
                 </button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- PLAYER SELECTION SCREEN -->
-    <div id="playerScreen" class="screen">
-        <div class="container">
-            <div class="player-selector">
-                <h2 id="gameTitle">खिलाड़ियों को चुनें</h2>
-                <div class="player-options">
-                    <div class="player-option" onclick="selectPlayers(2)">2 खिलाड़ी</div>
-                    <div class="player-option" onclick="selectPlayers(3)">3 खिलाड़ी</div>
-                    <div class="player-option" onclick="selectPlayers(4)">4 खिलाड़ी</div>
-                    <div class="player-option" onclick="selectPlayers(2)">दोबारा 2 खिलाड़ी</div>
-                </div>
-                <button class="start-btn" id="startBtn" onclick="startSelectedGame()">खेल शुरू करें</button>
-                <br>
+<!-- PLAYER SELECTION SCREEN -->
+<div id="playerScreen" class="screen">
+    <div class="container">
+        <div class="player-container">
+            <h2 id="gameTitle">🎲 LUDO</h2>
+            <p class="player-subtitle">खिलाड़ियों की संख्या चुनें</p>
+            
+            <div class="player-options">
+                <button class="player-btn" onclick="selectPlayers(2)">2 खिलाड़ी</button>
+                <button class="player-btn" onclick="selectPlayers(3)">3 खिलाड़ी</button>
+                <button class="player-btn" onclick="selectPlayers(4)">4 खिलाड़ी</button>
+            </div>
+
+            <div class="action-buttons">
+                <button class="start-btn" id="startBtn" onclick="startGame()">खेल शुरू करें ���</button>
                 <button class="back-btn" onclick="backToHome()">← वापस जाएँ</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- LUDO GAME SCREEN -->
-    <div id="ludoScreen" class="screen">
-        <div class="container">
-            <div class="top-controls">
-                <button class="home-btn" onclick="backToHome()">← होम</button>
-                <h1 style="flex: 1; text-align: center;">🎲 LUDO</h1>
-                <button class="home-btn" onclick="ludoNewGame()">नया खेल</button>
-            </div>
+<!-- LUDO GAME SCREEN -->
+<div id="ludoScreen" class="screen">
+    <div class="container">
+        <div class="game-header">
+            <button class="header-btn" onclick="backToHome()">← होम</button>
+            <h1>🎲 LUDO</h1>
+            <button class="header-btn" onclick="ludoNewGame()">नया खेल</button>
+        </div>
+
+        <div class="ludo-content">
+            <div class="game-status" id="ludoStatus">खेल शुरू हो गया</div>
             
-            <div class="ludo-status" id="ludoStatus">खेल शुरू हो गया</div>
-            
-            <div class="ludo-board">
-                <canvas id="ludoCanvas" width="600" height="600"></canvas>
+            <div class="game-board">
+                <canvas id="ludoCanvas" width="500" height="500"></canvas>
             </div>
 
-            <div class="ludo-controls">
-                <button class="roll-dice-btn" onclick="ludoRollDice()">🎲 पासा फेंकें</button>
+            <div class="game-controls">
+                <button class="roll-btn" id="ludoRollBtn" onclick="ludoRollDice()">🎲 पासा फेंकें</button>
                 <button class="new-game-btn" onclick="ludoNewGame()">🔄 नया खेल</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- SNAKES & LADDERS GAME SCREEN -->
-    <div id="snakesScreen" class="screen">
-        <div class="container">
-            <div class="top-controls">
-                <button class="home-btn" onclick="backToHome()">← होम</button>
-                <h1 style="flex: 1; text-align: center;">🐍 साँप & सीढ़ी</h1>
-                <button class="home-btn" onclick="snakesNewGame()">नया खेल</button>
-            </div>
+<!-- SNAKES & LADDERS GAME SCREEN -->
+<div id="snakesScreen" class="screen">
+    <div class="container">
+        <div class="game-header">
+            <button class="header-btn" onclick="backToHome()">← होम</button>
+            <h1>🐍 साँप & सीढ़ी</h1>
+            <button class="header-btn" onclick="snakesNewGame()">नया खेल</button>
+        </div>
 
-            <div class="snakes-status" id="snakesStatus">खेल शुरू हो गया</div>
-
+        <div class="snakes-content">
+            <div class="game-status" id="snakesStatus">खेल शुरू हो गया</div>
+            
             <div class="dice-display" id="diceDisplay">🎲</div>
 
-            <div class="snakes-board">
+            <div class="snakes-board-container">
                 <div id="snakesBoard"></div>
             </div>
 
-            <div class="snakes-controls">
-                <button class="roll-btn" onclick="snakesRollDice()">🎲 पासा फेंकें</button>
-                <button class="snakes-new-btn" onclick="snakesNewGame()">🔄 नया खेल</button>
+            <div class="game-controls">
+                <button class="roll-btn" id="snakesRollBtn" onclick="snakesRollDice()">🎲 पासा फेंकें</button>
+                <button class="new-game-btn" onclick="snakesNewGame()">🔄 नया खेल</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // ===== GLOBAL STATE =====
-        let currentGame = null;
-        let selectedPlayers = 2;
+<script>
+    // ===== GLOBAL STATE =====
+    let currentGame = null;
+    let selectedPlayers = 2;
 
-        // ===== SCREEN MANAGEMENT =====
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            document.getElementById(screenId).classList.add('active');
+    // ===== SCREEN MANAGEMENT =====
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+        });
+        document.getElementById(screenId).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function selectGame(game) {
+        currentGame = game;
+        const titles = {
+            'ludo': '🎲 LUDO',
+            'snakes': '🐍 साँप & सीढ़ी'
+        };
+        document.getElementById('gameTitle').textContent = titles[game];
+        selectedPlayers = 2;
+        document.querySelectorAll('.player-btn').forEach(btn => btn.classList.remove('selected'));
+        document.querySelectorAll('.player-btn')[0].classList.add('selected');
+        showScreen('playerScreen');
+    }
+
+    function selectPlayers(num) {
+        selectedPlayers = num;
+        document.querySelectorAll('.player-btn').forEach(btn => btn.classList.remove('selected'));
+        event.target.classList.add('selected');
+    }
+
+    function startGame() {
+        if (currentGame === 'ludo') {
+            ludoInit(selectedPlayers);
+            showScreen('ludoScreen');
+        } else if (currentGame === 'snakes') {
+            snakesInit(selectedPlayers);
+            showScreen('snakesScreen');
         }
+    }
 
-        function selectGame(game) {
-            currentGame = game;
-            document.getElementById('gameTitle').textContent = 
-                game === 'ludo' ? '🎲 LUDO - खिलाड़ियों को चुनें' : '🐍 SNAKES & LADDERS - खिलाड़ियों को चुनें';
-            showScreen('playerScreen');
-        }
+    function backToHome() {
+        showScreen('homeScreen');
+    }
 
-        function selectPlayers(num) {
-            selectedPlayers = num;
-            document.querySelectorAll('.player-option').forEach(opt => opt.classList.remove('selected'));
-            event.target.classList.add('selected');
-        }
+    // ===== LUDO GAME =====
+    const ludoColors = [
+        { name: 'लाल', color: '#ef4444', light: '#fecaca', start: 0, text: '#ffffff' },
+        { name: 'हरा', color: '#22c55e', light: '#bbf7d0', start: 13, text: '#052e16' },
+        { name: 'पीला', color: '#facc15', light: '#fef08a', start: 26, text: '#422006' },
+        { name: 'नीला', color: '#3b82f6', light: '#bfdbfe', start: 39, text: '#ffffff' }
+    ];
 
-        function startSelectedGame() {
-            if (currentGame === 'ludo') {
-                ludoInit(selectedPlayers);
-                showScreen('ludoScreen');
-            } else if (currentGame === 'snakes') {
-                snakesInit(selectedPlayers);
-                showScreen('snakesScreen');
-            }
-        }
+    const ludoPath = [];
+    for (let x = 1; x <= 13; x++) ludoPath.push([x, 0]);
+    for (let y = 1; y <= 13; y++) ludoPath.push([14, y]);
+    for (let x = 13; x >= 1; x--) ludoPath.push([x, 14]);
+    for (let y = 13; y >= 1; y--) ludoPath.push([0, y]);
 
-        function backToHome() {
-            showScreen('homeScreen');
-        }
+    let ludoGame = null;
 
-        // ===== LUDO GAME =====
-        const ludoColors = [
-            { name: 'लाल', color: '#ef4444', light: '#fecaca', start: 0, text: '#ffffff' },
-            { name: 'हरा', color: '#22c55e', light: '#bbf7d0', start: 13, text: '#052e16' },
-            { name: 'पीला', color: '#facc15', light: '#fef08a', start: 26, text: '#422006' },
-            { name: 'नीला', color: '#3b82f6', light: '#bfdbfe', start: 39, text: '#ffffff' }
-        ];
+    function ludoInit(numPlayers) {
+        ludoGame = {
+            players: ludoColors.slice(0, numPlayers).map(color => ({
+                ...color,
+                tokens: [-1, -1, -1, -1]
+            })),
+            currentPlayer: 0,
+            dice: 0,
+            diceRolled: false,
+            winner: null
+        };
+        ludoDraw();
+        ludoUpdateStatus(`${ludoGame.players[0].name} की बारी - पासा फेंकें`);
+    }
 
-        const ludoPath = [];
-        for (let x = 1; x <= 13; x++) ludoPath.push([x, 0]);
-        for (let y = 1; y <= 13; y++) ludoPath.push([14, y]);
-        for (let x = 13; x >= 1; x--) ludoPath.push([x, 14]);
-        for (let y = 13; y >= 1; y--) ludoPath.push([0, y]);
+    function ludoRollDice() {
+        if (ludoGame.diceRolled || ludoGame.winner !== null) return;
 
-        let ludoGame = null;
+        ludoGame.dice = Math.floor(Math.random() * 6) + 1;
+        ludoGame.diceRolled = true;
 
-        function ludoInit(numPlayers) {
-            ludoGame = {
-                players: ludoColors.slice(0, numPlayers).map(color => ({
-                    ...color,
-                    tokens: [-1, -1, -1, -1]
-                })),
-                currentPlayer: 0,
-                dice: 0,
-                diceRolled: false,
-                winner: null
-            };
+        const possibleMoves = ludoGame.players[ludoGame.currentPlayer].tokens.filter(
+            token => ludoCanMove(token, ludoGame.dice)
+        );
+
+        if (possibleMoves.length === 0) {
+            ludoUpdateStatus(`${ludoGame.players[ludoGame.currentPlayer].name} को ${ludoGame.dice} आया लेकिन कोई गोटी नहीं चल सकती।`);
             ludoDraw();
-            ludoUpdateStatus();
-        }
-
-        function ludoRollDice() {
-            if (ludoGame.diceRolled || ludoGame.winner !== null) return;
-
-            ludoGame.dice = Math.floor(Math.random() * 6) + 1;
-            ludoGame.diceRolled = true;
-
-            const possibleMoves = ludoGame.players[ludoGame.currentPlayer].tokens.filter(
-                token => ludoCanMove(token, ludoGame.dice)
-            );
-
-            if (possibleMoves.length === 0) {
-                ludoUpdateStatus(`${ludoGame.players[ludoGame.currentPlayer].name} को ${ludoGame.dice} आया लेकिन कोई गोटी नहीं चल सकती।`);
-                ludoDraw();
-                setTimeout(() => {
-                    if (ludoGame.dice === 6) {
-                        ludoGame.diceRolled = false;
-                        ludoGame.dice = 0;
-                        ludoUpdateStatus(`${ludoGame.players[ludoGame.currentPlayer].name} को फिर मौका।`);
-                        ludoDraw();
-                    } else {
-                        ludoNextPlayer();
-                    }
-                }, 1000);
-                return;
-            }
-
-            ludoUpdateStatus(`${ludoGame.players[ludoGame.currentPlayer].name} को ${ludoGame.dice} आया। गोटी पर क्लिक करें।`);
-            ludoDraw();
-        }
-
-        function ludoCanMove(token, dice) {
-            if (token === 57) return false;
-            if (token === -1) return dice === 6;
-            return token + dice <= 57;
-        }
-
-        function ludoGlobalPosition(player, step) {
-            return (ludoGame.players[player].start + step) % 52;
-        }
-
-        function ludoMoveToken(playerIndex, tokenIndex) {
-            if (playerIndex !== ludoGame.currentPlayer || !ludoGame.diceRolled || ludoGame.winner !== null) return;
-
-            let token = ludoGame.players[playerIndex].tokens[tokenIndex];
-            if (!ludoCanMove(token, ludoGame.dice)) return;
-
-            const dice = ludoGame.dice;
-            if (token === -1) {
-                token = 0;
-            } else {
-                token += dice;
-            }
-
-            ludoGame.players[playerIndex].tokens[tokenIndex] = token;
-
-            // Capture
-            let captured = false;
-            if (token < 52) {
-                const position = ludoGlobalPosition(playerIndex, token);
-                const safeCells = [0, 8, 13, 21, 26, 34, 39, 47];
-
-                if (!safeCells.includes(position)) {
-                    ludoGame.players.forEach((player, otherPlayer) => {
-                        if (otherPlayer === playerIndex) return;
-                        player.tokens = player.tokens.map(otherToken => {
-                            if (otherToken >= 0 && otherToken < 52 && 
-                                ludoGlobalPosition(otherPlayer, otherToken) === position) {
-                                captured = true;
-                                return -1;
-                            }
-                            return otherToken;
-                        });
-                    });
+            setTimeout(() => {
+                if (ludoGame.dice === 6) {
+                    ludoGame.diceRolled = false;
+                    ludoGame.dice = 0;
+                    ludoUpdateStatus(`${ludoGame.players[ludoGame.currentPlayer].name} को फिर मौका। पासा फेंकें।`);
+                    ludoDraw();
+                } else {
+                    ludoNextPlayer();
                 }
-            }
-
-            // Check winner
-            const allFinished = ludoGame.players[playerIndex].tokens.every(t => t === 57);
-            if (allFinished) {
-                ludoGame.winner = playerIndex;
-                ludoGame.diceRolled = false;
-                ludoUpdateStatus(`🏆 ${ludoGame.players[playerIndex].name} खिलाड़ी जीत गया!`);
-                ludoDraw();
-                return;
-            }
-
-            const extraTurn = dice === 6 || captured;
-            ludoGame.dice = 0;
-            ludoGame.diceRolled = false;
-
-            if (extraTurn) {
-                ludoUpdateStatus(`${captured ? '🎯 गोटी काट दी!' : '🎲 6 आया!'} ${ludoGame.players[playerIndex].name} को फिर मौका।`);
-            } else {
-                ludoNextPlayer();
-            }
-            ludoDraw();
+            }, 1500);
+            return;
         }
 
-        function ludoNextPlayer() {
-            ludoGame.currentPlayer = (ludoGame.currentPlayer + 1) % ludoGame.players.length;
-            ludoGame.dice = 0;
-            ludoGame.diceRolled = false;
-            ludoUpdateStatus(`${ludoGame.players[ludoGame.currentPlayer].name} की बारी - पासा फेंकें।`);
+        ludoUpdateStatus(`${ludoGame.players[ludoGame.currentPlayer].name} को ${ludoGame.dice} आया। गोटी पर क्लिक करें।`);
+        ludoDraw();
+    }
+
+    function ludoCanMove(token, dice) {
+        if (token === 57) return false;
+        if (token === -1) return dice === 6;
+        return token + dice <= 57;
+    }
+
+    function ludoGlobalPosition(player, step) {
+        return (ludoGame.players[player].start + step) % 52;
+    }
+
+    function ludoMoveToken(playerIndex, tokenIndex) {
+        if (playerIndex !== ludoGame.currentPlayer || !ludoGame.diceRolled || ludoGame.winner !== null) return;
+
+        let token = ludoGame.players[playerIndex].tokens[tokenIndex];
+        if (!ludoCanMove(token, ludoGame.dice)) return;
+
+        const dice = ludoGame.dice;
+        if (token === -1) {
+            token = 0;
+        } else {
+            token += dice;
         }
 
-        function ludoUpdateStatus(text) {
-            document.getElementById('ludoStatus').textContent = text;
-        }
+        ludoGame.players[playerIndex].tokens[tokenIndex] = token;
 
-        function ludoTokenPosition(playerIndex, tokenIndex) {
-            const player = ludoGame.players[playerIndex];
-            const token = player.tokens[tokenIndex];
-            const SIZE = 50;
-            const homePositions = [[2, 2], [11, 2], [11, 11], [2, 11]];
-
-            if (token === -1) {
-                const home = homePositions[playerIndex];
-                const offsets = [[-0.45, -0.45], [0.45, -0.45], [-0.45, 0.45], [0.45, 0.45]];
-                return {
-                    x: (home[0] + 0.5 + offsets[tokenIndex][0]) * SIZE,
-                    y: (home[1] + 0.5 + offsets[tokenIndex][1]) * SIZE
-                };
-            }
-
-            if (token < 52) {
-                const position = ludoPath[ludoGlobalPosition(playerIndex, token)];
-                return { x: (position[0] + 0.5) * SIZE, y: (position[1] + 0.5) * SIZE };
-            }
-
-            const k = token - 52;
-            const finishLanes = [[7 - k, 7], [7, 7 - k], [7 + k, 7], [7, 7 + k]];
-            const lane = finishLanes[playerIndex];
-            return { x: (lane[0] + 0.5) * SIZE, y: (lane[1] + 0.5) * SIZE };
-        }
-
-        function ludoDraw() {
-            const canvas = document.getElementById('ludoCanvas');
-            const ctx = canvas.getContext('2d');
-            const SIZE = 50;
-
-            ctx.fillStyle = '#f8fafc';
-            ctx.fillRect(0, 0, 600, 600);
-
-            // Home zones
-            const homeZones = [[0, 0], [9, 0], [9, 9], [0, 9]];
-            homeZones.forEach((zone, index) => {
-                const player = ludoGame.players[index];
-                if (!player) return;
-                ctx.fillStyle = player.light;
-                ctx.fillRect(zone[0] * SIZE, zone[1] * SIZE, 6 * SIZE, 6 * SIZE);
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect((zone[0] + 1) * SIZE, (zone[1] + 1) * SIZE, 4 * SIZE, 4 * SIZE);
-            });
-
-            // Track
+        // Capture logic
+        let captured = false;
+        if (token < 52) {
+            const position = ludoGlobalPosition(playerIndex, token);
             const safeCells = [0, 8, 13, 21, 26, 34, 39, 47];
-            ludoPath.forEach((cell, index) => {
-                const x = cell[0];
-                const y = cell[1];
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(x * SIZE, y * SIZE, SIZE, SIZE);
-                ctx.strokeStyle = '#cbd5e1';
-                ctx.strokeRect(x * SIZE, y * SIZE, SIZE, SIZE);
 
-                if (safeCells.includes(index)) {
-                    ctx.fillStyle = '#fde68a';
-                    ctx.beginPath();
-                    ctx.arc((x + 0.5) * SIZE, (y + 0.5) * SIZE, 15, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#92400e';
-                    ctx.font = '20px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText('★', (x + 0.5) * SIZE, (y + 0.5) * SIZE);
-                }
-            });
+            if (!safeCells.includes(position)) {
+                ludoGame.players.forEach((player, otherPlayer) => {
+                    if (otherPlayer === playerIndex) return;
+                    player.tokens = player.tokens.map(otherToken => {
+                        if (otherToken >= 0 && otherToken < 52 && 
+                            ludoGlobalPosition(otherPlayer, otherToken) === position) {
+                            captured = true;
+                            return -1;
+                        }
+                        return otherToken;
+                    });
+                });
+            }
+        }
 
-            // Start cells
-            ludoGame.players.forEach(player => {
-                const cell = ludoPath[player.start];
-                ctx.fillStyle = player.color;
-                ctx.fillRect(cell[0] * SIZE, cell[1] * SIZE, SIZE, SIZE);
-                ctx.fillStyle = player.text;
-                ctx.font = 'bold 11px Arial';
+        // Check winner
+        const allFinished = ludoGame.players[playerIndex].tokens.every(t => t === 57);
+        if (allFinished) {
+            ludoGame.winner = playerIndex;
+            ludoGame.diceRolled = false;
+            ludoUpdateStatus(`🏆 ${ludoGame.players[playerIndex].name} खिलाड़ी जीत गया! 🎉`);
+            ludoDraw();
+            return;
+        }
+
+        const extraTurn = dice === 6 || captured;
+        ludoGame.dice = 0;
+        ludoGame.diceRolled = false;
+
+        if (extraTurn) {
+            ludoUpdateStatus(`${captured ? '🎯 गोटी काट दी!' : '🎲 6 आया!'} ${ludoGame.players[playerIndex].name} को फिर मौका।`);
+        } else {
+            ludoNextPlayer();
+        }
+        ludoDraw();
+    }
+
+    function ludoNextPlayer() {
+        ludoGame.currentPlayer = (ludoGame.currentPlayer + 1) % ludoGame.players.length;
+        ludoGame.dice = 0;
+        ludoGame.diceRolled = false;
+        ludoUpdateStatus(`${ludoGame.players[ludoGame.currentPlayer].name} की बारी - पासा फेंकें`);
+    }
+
+    function ludoUpdateStatus(text) {
+        document.getElementById('ludoStatus').textContent = text;
+    }
+
+    function ludoTokenPosition(playerIndex, tokenIndex) {
+        const player = ludoGame.players[playerIndex];
+        const token = player.tokens[tokenIndex];
+        const SIZE = 50;
+        const homePositions = [[2, 2], [11, 2], [11, 11], [2, 11]];
+
+        if (token === -1) {
+            const home = homePositions[playerIndex];
+            const offsets = [[-0.35, -0.35], [0.35, -0.35], [-0.35, 0.35], [0.35, 0.35]];
+            return {
+                x: (home[0] + 0.5 + offsets[tokenIndex][0]) * SIZE,
+                y: (home[1] + 0.5 + offsets[tokenIndex][1]) * SIZE
+            };
+        }
+
+        if (token < 52) {
+            const position = ludoPath[ludoGlobalPosition(playerIndex, token)];
+            return { x: (position[0] + 0.5) * SIZE, y: (position[1] + 0.5) * SIZE };
+        }
+
+        const k = token - 52;
+        const finishLanes = [[7 - k, 7], [7, 7 - k], [7 + k, 7], [7, 7 + k]];
+        const lane = finishLanes[playerIndex];
+        return { x: (lane[0] + 0.5) * SIZE, y: (lane[1] + 0.5) * SIZE };
+    }
+
+    function ludoDraw() {
+        const canvas = document.getElementById('ludoCanvas');
+        const ctx = canvas.getContext('2d');
+        const SIZE = 50;
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(0, 0, 500, 500);
+
+        // Home zones
+        const homeZones = [[0, 0], [9, 0], [9, 9], [0, 9]];
+        homeZones.forEach((zone, index) => {
+            const player = ludoGame.players[index];
+            if (!player) return;
+            ctx.fillStyle = player.light;
+            ctx.fillRect(zone[0] * SIZE, zone[1] * SIZE, 6 * SIZE, 6 * SIZE);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect((zone[0] + 1) * SIZE, (zone[1] + 1) * SIZE, 4 * SIZE, 4 * SIZE);
+        });
+
+        // Track
+        const safeCells = [0, 8, 13, 21, 26, 34, 39, 47];
+        ludoPath.forEach((cell, index) => {
+            const x = cell[0];
+            const y = cell[1];
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(x * SIZE, y * SIZE, SIZE, SIZE);
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(x * SIZE, y * SIZE, SIZE, SIZE);
+
+            if (safeCells.includes(index)) {
+                ctx.fillStyle = '#fde68a';
+                ctx.beginPath();
+                ctx.arc((x + 0.5) * SIZE, (y + 0.5) * SIZE, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#92400e';
+                ctx.font = 'bold 16px Arial';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText('START', (cell[0] + 0.5) * SIZE, (cell[1] + 0.5) * SIZE);
-            });
+                ctx.fillText('★', (x + 0.5) * SIZE, (y + 0.5) * SIZE);
+            }
+        });
 
-            // Finish lanes
-            ludoGame.players.forEach((player, index) => {
-                for (let k = 0; k < 6; k++) {
-                    const lanes = [[7 - k, 7], [7, 7 - k], [7 + k, 7], [7, 7 + k]];
-                    const cell = lanes[index];
-                    ctx.fillStyle = player.light;
-                    ctx.fillRect(cell[0] * SIZE, cell[1] * SIZE, SIZE, SIZE);
-                    ctx.strokeStyle = '#94a3b8';
-                    ctx.strokeRect(cell[0] * SIZE, cell[1] * SIZE, SIZE, SIZE);
-                }
-            });
-
-            // Center
-            ludoGame.players.forEach((player, index) => {
-                ctx.fillStyle = player.color;
-                ctx.beginPath();
-                if (index === 0) {
-                    ctx.moveTo(6 * SIZE, 6 * SIZE);
-                    ctx.lineTo(9 * SIZE, 6 * SIZE);
-                    ctx.lineTo(7.5 * SIZE, 7.5 * SIZE);
-                } else if (index === 1) {
-                    ctx.moveTo(9 * SIZE, 6 * SIZE);
-                    ctx.lineTo(9 * SIZE, 9 * SIZE);
-                    ctx.lineTo(7.5 * SIZE, 7.5 * SIZE);
-                } else if (index === 2) {
-                    ctx.moveTo(9 * SIZE, 9 * SIZE);
-                    ctx.lineTo(6 * SIZE, 9 * SIZE);
-                    ctx.lineTo(7.5 * SIZE, 7.5 * SIZE);
-                } else if (index === 3) {
-                    ctx.moveTo(6 * SIZE, 9 * SIZE);
-                    ctx.lineTo(6 * SIZE, 6 * SIZE);
-                    ctx.lineTo(7.5 * SIZE, 7.5 * SIZE);
-                }
-                ctx.closePath();
-                ctx.fill();
-            });
-
-            // Tokens
-            ludoGame.players.forEach((player, playerIndex) => {
-                player.tokens.forEach((token, tokenIndex) => {
-                    const position = ludoTokenPosition(playerIndex, tokenIndex);
-                    const active = playerIndex === ludoGame.currentPlayer && ludoGame.diceRolled && 
-                                  ludoCanMove(token, ludoGame.dice);
-
-                    ctx.beginPath();
-                    ctx.arc(position.x, position.y, 18, 0, Math.PI * 2);
-                    ctx.fillStyle = player.color;
-                    ctx.fill();
-                    ctx.lineWidth = active ? 5 : 2;
-                    ctx.strokeStyle = active ? '#111827' : '#ffffff';
-                    ctx.stroke();
-
-                    ctx.fillStyle = player.text;
-                    ctx.font = 'bold 13px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(tokenIndex + 1, position.x, position.y);
-                });
-            });
-
-            // Dice
-            ctx.fillStyle = '#111827';
-            ctx.fillRect(240, 240, 120, 120);
-            const diceFaces = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '64px Arial';
+        // Start cells
+        ludoGame.players.forEach(player => {
+            const cell = ludoPath[player.start];
+            ctx.fillStyle = player.color;
+            ctx.fillRect(cell[0] * SIZE, cell[1] * SIZE, SIZE, SIZE);
+            ctx.fillStyle = player.text;
+            ctx.font = 'bold 10px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(diceFaces[ludoGame.dice] || '🎲', 300, 300);
-        }
+            ctx.fillText('START', (cell[0] + 0.5) * SIZE, (cell[1] + 0.5) * SIZE);
+        });
 
-        function ludoNewGame() {
-            ludoInit(selectedPlayers);
-        }
+        // Finish lanes
+        ludoGame.players.forEach((player, index) => {
+            for (let k = 0; k < 6; k++) {
+                const lanes = [[7 - k, 7], [7, 7 - k], [7 + k, 7], [7, 7 + k]];
+                const cell = lanes[index];
+                ctx.fillStyle = player.light;
+                ctx.fillRect(cell[0] * SIZE, cell[1] * SIZE, SIZE, SIZE);
+                ctx.strokeStyle = '#cbd5e1';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(cell[0] * SIZE, cell[1] * SIZE, SIZE, SIZE);
+            }
+        });
 
-        document.getElementById('ludoCanvas').addEventListener('click', function(e) {
-            if (!ludoGame.diceRolled) return;
-            const rect = this.getBoundingClientRect();
-            const x = (e.clientX - rect.left) * 600 / rect.width;
-            const y = (e.clientY - rect.top) * 600 / rect.height;
+        // Center
+        ludoGame.players.forEach((player, index) => {
+            ctx.fillStyle = player.color;
+            ctx.beginPath();
+            if (index === 0) {
+                ctx.moveTo(6 * SIZE, 6 * SIZE);
+                ctx.lineTo(9 * SIZE, 6 * SIZE);
+                ctx.lineTo(7.5 * SIZE, 7.5 * SIZE);
+            } else if (index === 1) {
+                ctx.moveTo(9 * SIZE, 6 * SIZE);
+                ctx.lineTo(9 * SIZE, 9 * SIZE);
+                ctx.lineTo(7.5 * SIZE, 7.5 * SIZE);
+            } else if (index === 2) {
+                ctx.moveTo(9 * SIZE, 9 * SIZE);
+                ctx.lineTo(6 * SIZE, 9 * SIZE);
+                ctx.lineTo(7.5 * SIZE, 7.5 * SIZE);
+            } else if (index === 3) {
+                ctx.moveTo(6 * SIZE, 9 * SIZE);
+                ctx.lineTo(6 * SIZE, 6 * SIZE);
+                ctx.lineTo(7.5 * SIZE, 7.5 * SIZE);
+            }
+            ctx.closePath();
+            ctx.fill();
+        });
 
-            ludoGame.players[ludoGame.currentPlayer].tokens.forEach((token, index) => {
-                const position = ludoTokenPosition(ludoGame.currentPlayer, index);
-                const distance = Math.hypot(x - position.x, y - position.y);
-                if (distance < 30) {
-                    ludoMoveToken(ludoGame.currentPlayer, index);
-                }
+        // Tokens
+        ludoGame.players.forEach((player, playerIndex) => {
+            player.tokens.forEach((token, tokenIndex) => {
+                const position = ludoTokenPosition(playerIndex, tokenIndex);
+                const active = playerIndex === ludoGame.currentPlayer && ludoGame.diceRolled && 
+                              ludoCanMove(token, ludoGame.dice);
+
+                ctx.beginPath();
+                ctx.arc(position.x, position.y, 16, 0, Math.PI * 2);
+                ctx.fillStyle = player.color;
+                ctx.fill();
+                ctx.lineWidth = active ? 4 : 2;
+                ctx.strokeStyle = active ? '#ffeb3b' : '#ffffff';
+                ctx.stroke();
+
+                ctx.fillStyle = player.text;
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(tokenIndex + 1, position.x, position.y);
             });
         });
 
-        // ===== SNAKES & LADDERS GAME =====
-        const snakes = {
-            99: 54, 95: 75, 92: 73, 87: 24, 64: 36, 62: 18, 56: 26, 49: 11, 47: 5, 16: 6
+        // Dice
+        ctx.fillStyle = '#111827';
+        ctx.fillRect(200, 200, 100, 100);
+        const diceFaces = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 50px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(diceFaces[ludoGame.dice] || '🎲', 250, 250);
+    }
+
+    function ludoNewGame() {
+        ludoInit(selectedPlayers);
+    }
+
+    // ===== SNAKES & LADDERS GAME =====
+    const snakes = {
+        99: 54, 95: 75, 92: 73, 87: 24, 64: 36, 62: 18, 56: 26, 49: 11, 47: 5, 16: 6
+    };
+
+    const ladders = {
+        4: 25, 9: 31, 20: 40, 28: 55, 21: 42, 36: 57, 51: 67, 71: 91, 80: 99
+    };
+
+    let snakesGame = null;
+
+    function snakesInit(numPlayers) {
+        snakesGame = {
+            players: Array(numPlayers).fill(0).map((_, i) => ({ id: i + 1, position: 0, name: ['लाल', 'नीला', 'हरा', 'पीला'][i] })),
+            currentPlayer: 0,
+            dice: 0,
+            gameOver: false,
+            diceRolled: false
         };
+        snakesCreateBoard();
+        snakesUpdateStatus(`${snakesGame.players[0].name} की बारी - पासा फेंकें`);
+    }
 
-        const ladders = {
-            4: 25, 9: 31, 20: 40, 28: 55, 21: 42, 36: 57, 51: 67, 71: 91, 80: 99
-        };
+    function snakesCreateBoard() {
+        const board = document.getElementById('snakesBoard');
+        board.innerHTML = '';
 
-        let snakesGame = null;
-
-        function snakesInit(numPlayers) {
-            snakesGame = {
-                players: Array(numPlayers).fill(0).map((_, i) => ({ id: i + 1, position: 1 })),
-                currentPlayer: 0,
-                dice: 0,
-                gameOver: false,
-                diceRolled: false
-            };
-            snakesCreateBoard();
-            snakesUpdateStatus();
-        }
-
-        function snakesCreateBoard() {
-            const board = document.getElementById('snakesBoard');
-            board.innerHTML = '';
-
-            for (let row = 9; row >= 0; row--) {
-                let numbers = [];
-                for (let i = 0; i < 10; i++) {
-                    numbers.push(row * 10 + i + 1);
-                }
-                if (row % 2 === 1) numbers.reverse();
-
-                numbers.forEach(num => {
-                    const cell = document.createElement('div');
-                    cell.className = 'snakes-cell';
-                    cell.id = 'cell-' + num;
-
-                    const number = document.createElement('span');
-                    number.className = 'cell-number';
-                    number.textContent = num;
-                    cell.appendChild(number);
-
-                    if (snakes[num]) {
-                        cell.classList.add('snake-cell');
-                        cell.innerHTML += '<div class="snakes-icon">🐍</div>';
-                    }
-                    if (ladders[num]) {
-                        cell.classList.add('ladder-cell');
-                        cell.innerHTML += '<div class="snakes-icon">🪜</div>';
-                    }
-
-                    board.appendChild(cell);
-                });
+        for (let row = 9; row >= 0; row--) {
+            let numbers = [];
+            for (let i = 0; i < 10; i++) {
+                numbers.push(row * 10 + i + 1);
             }
-            snakesDrawPlayers();
-        }
+            if (row % 2 === 1) numbers.reverse();
 
-        function snakesDrawPlayers() {
-            document.querySelectorAll('.player-token').forEach(p => p.remove());
+            numbers.forEach(num => {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.id = 'cell-' + num;
 
-            snakesGame.players.forEach(player => {
-                if (player.position === 0) return;
-                const cell = document.getElementById('cell-' + player.position);
-                if (!cell) return;
+                const number = document.createElement('span');
+                number.className = 'cell-number';
+                number.textContent = num;
+                cell.appendChild(number);
 
-                const token = document.createElement('div');
-                token.className = `player-token p${player.id}`;
-                token.textContent = player.id;
-                cell.appendChild(token);
+                if (snakes[num]) {
+                    cell.classList.add('snake-cell');
+                    const icon = document.createElement('div');
+                    icon.className = 'cell-icon';
+                    icon.textContent = '🐍';
+                    cell.appendChild(icon);
+                }
+                if (ladders[num]) {
+                    cell.classList.add('ladder-cell');
+                    const icon = document.createElement('div');
+                    icon.className = 'cell-icon';
+                    icon.textContent = '🪜';
+                    cell.appendChild(icon);
+                }
+
+                board.appendChild(cell);
             });
         }
+        snakesDrawPlayers();
+    }
 
-        function snakesRollDice() {
-            if (snakesGame.diceRolled || snakesGame.gameOver) return;
+    function snakesDrawPlayers() {
+        document.querySelectorAll('.player-marker').forEach(p => p.remove());
 
-            snakesGame.dice = Math.floor(Math.random() * 6) + 1;
-            snakesGame.diceRolled = true;
-            document.getElementById('diceDisplay').innerHTML = `<div class="dice-emoji">🎲</div> ${snakesGame.dice}`;
+        snakesGame.players.forEach(player => {
+            if (player.position === 0) return;
+            const cell = document.getElementById('cell-' + player.position);
+            if (!cell) return;
 
-            const player = snakesGame.players[snakesGame.currentPlayer];
-            const newPosition = Math.min(100, player.position + snakesGame.dice);
+            const marker = document.createElement('div');
+            marker.className = `player-marker p${player.id}`;
+            marker.textContent = player.id;
+            cell.appendChild(marker);
+        });
+    }
 
-            if (newPosition === 100) {
-                player.position = 100;
-                snakesGame.gameOver = true;
-                snakesUpdateStatus(`🏆 खिलाड़ी ${player.id} जीत गया!`);
-                snakesDrawPlayers();
-                return;
-            }
+    function snakesRollDice() {
+        if (snakesGame.diceRolled || snakesGame.gameOver) return;
 
-            player.position = newPosition;
+        snakesGame.dice = Math.floor(Math.random() * 6) + 1;
+        snakesGame.diceRolled = true;
+        const diceFaces = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        document.getElementById('diceDisplay').textContent = diceFaces[snakesGame.dice];
 
-            if (snakes[newPosition]) {
-                player.position = snakes[newPosition];
-                snakesUpdateStatus(`खिलाड़ी ${player.id}: ${newPosition} 🐍 काटा गया, अब ${player.position} पर`);
-            } else if (ladders[newPosition]) {
-                player.position = ladders[newPosition];
-                snakesUpdateStatus(`खिलाड़ी ${player.id}: ${newPosition} 🪜 सीढ़ी चढ़ी, अब ${player.position} पर`);
-            } else {
-                snakesUpdateStatus(`खिलाड़ी ${player.id} अब ${newPosition} पर है`);
-            }
+        const player = snakesGame.players[snakesGame.currentPlayer];
+        const newPosition = Math.min(100, player.position + snakesGame.dice);
 
+        if (newPosition === 100) {
+            player.position = 100;
+            snakesGame.gameOver = true;
+            snakesUpdateStatus(`🏆 ${player.name} खिलाड़ी जीत गया! 🎉`);
             snakesDrawPlayers();
-
-            setTimeout(() => {
-                if (snakesGame.dice === 6) {
-                    snakesGame.diceRolled = false;
-                    snakesGame.dice = 0;
-                    document.getElementById('diceDisplay').innerHTML = '🎲';
-                    snakesUpdateStatus(`खिलाड़ी ${player.id} को 6 आया! फिर से पासा फेंकें।`);
-                } else {
-                    snakesGame.currentPlayer = (snakesGame.currentPlayer + 1) % snakesGame.players.length;
-                    snakesGame.diceRolled = false;
-                    snakesGame.dice = 0;
-                    document.getElementById('diceDisplay').innerHTML = '🎲';
-                    snakesUpdateStatus(`खिलाड़ी ${snakesGame.players[snakesGame.currentPlayer].id} की बारी`);
-                }
-            }, 800);
+            return;
         }
 
-        function snakesUpdateStatus(text) {
-            document.getElementById('snakesStatus').textContent = text;
+        player.position = newPosition;
+
+        if (snakes[newPosition]) {
+            player.position = snakes[newPosition];
+            snakesUpdateStatus(`🐍 ${player.name} को काटा गया! ${newPosition} से ${player.position} पर गया`);
+        } else if (ladders[newPosition]) {
+            player.position = ladders[newPosition];
+            snakesUpdateStatus(`🪜 ${player.name} सीढ़ी चढ़ा! ${newPosition} से ${player.position} पर गया`);
+        } else {
+            snakesUpdateStatus(`${player.name} अब ${newPosition} पर है`);
         }
 
-        function snakesNewGame() {
-            snakesInit(selectedPlayers);
-        }
+        snakesDrawPlayers();
 
-        // Initial state
-        ludoInit(2);
-        snakesInit(2);
-    </script>
+        setTimeout(() => {
+            if (snakesGame.dice === 6) {
+                snakesGame.diceRolled = false;
+                snakesGame.dice = 0;
+                document.getElementById('diceDisplay').textContent = '🎲';
+                snakesUpdateStatus(`${player.name} को 6 आया! फिर से पासा फेंकें।`);
+            } else {
+                snakesGame.currentPlayer = (snakesGame.currentPlayer + 1) % snakesGame.players.length;
+                snakesGame.diceRolled = false;
+                snakesGame.dice = 0;
+                document.getElementById('diceDisplay').textContent = '🎲';
+                snakesUpdateStatus(`${snakesGame.players[snakesGame.currentPlayer].name} की बारी - पासा फेंकें`);
+            }
+        }, 1500);
+    }
+
+    function snakesUpdateStatus(text) {
+        document.getElementById('snakesStatus').textContent = text;
+    }
+
+    function snakesNewGame() {
+        snakesInit(selectedPlayers);
+    }
+
+    // Canvas click handler for Ludo
+    document.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('ludoCanvas');
+        if (canvas) {
+            canvas.addEventListener('click', function(e) {
+                if (!ludoGame || !ludoGame.diceRolled) return;
+                const rect = this.getBoundingClientRect();
+                const x = (e.clientX - rect.left) * 500 / rect.width;
+                const y = (e.clientY - rect.top) * 500 / rect.height;
+
+                ludoGame.players[ludoGame.currentPlayer].tokens.forEach((token, index) => {
+                    const position = ludoTokenPosition(ludoGame.currentPlayer, index);
+                    const distance = Math.hypot(x - position.x, y - position.y);
+                    if (distance < 25) {
+                        ludoMoveToken(ludoGame.currentPlayer, index);
+                    }
+                });
+            });
+        }
+    });
+
+    // Initial setup
+    ludoInit(2);
+    snakesInit(2);
+</script>
+
 </body>
 </html>
